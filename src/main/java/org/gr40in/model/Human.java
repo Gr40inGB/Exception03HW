@@ -11,6 +11,15 @@ public class Human {
     private Long phoneNumber;
     private Sex sex;
 
+    public Human() {
+        this.lastName = "";
+        this.firstName = "";
+        this.patronymic = "";
+        this.birthDate = null;
+        this.phoneNumber = null;
+        this.sex = null;
+    }
+
     public Human(String lastName, String firstName, String patronymic, LocalDate birthDate, Long phoneNumber, Sex sex) {
         this.lastName = lastName;
         this.firstName = firstName;
