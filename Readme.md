@@ -83,7 +83,7 @@ public class HumanService {
 
 ```
 
-Запись файла через Files.write - эта операция сама закрывает поток - поэтоу вручну закрывать не нужно
+Запись файла через Files.write - эта операция сама закрывает поток - поэтому вручную закрывать не нужно
 ```java
     public void writeNewHuman(Human human) {
         this.updateLastNameSet();
