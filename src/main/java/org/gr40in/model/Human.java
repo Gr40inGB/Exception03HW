@@ -1,6 +1,7 @@
 package org.gr40in.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Human {
@@ -31,14 +32,8 @@ public class Human {
 
     @Override
     public String toString() {
-        return "Human{" +
-                "lastName='" + lastName + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", patronymic='" + patronymic + '\'' +
-                ", birthDate=" + birthDate +
-                ", phoneNumber=" + phoneNumber +
-                ", sex=" + sex +
-                '}';
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        return lastName + " " + firstName + " " + patronymic + " " + birthDate.format(formatter) + " " + phoneNumber + " " + sex;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.gr40in.app;
 
+import org.gr40in.HumanParsingException;
 import org.gr40in.fakedatabase.FakeDataBase;
 import org.gr40in.model.Human;
 import org.gr40in.model.HumanService;
@@ -9,18 +10,18 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleApp {
-    List<Commands> menu;
-    FakeDataBase dataBase;
-    boolean run;
+    private List<Commands> menu;
+    private FakeDataBase dataBase;
+    private boolean run;
 
     Scanner scanner = new Scanner(System.in);
 
     public List<Commands> getMenu() {
-        return menu;
+        return this.menu;
     }
 
     public FakeDataBase getDataBase() {
-        return dataBase;
+        return this.dataBase;
     }
 
     public boolean isRun() {
@@ -28,11 +29,22 @@ public class ConsoleApp {
     }
 
     public void enterNew() {
-        System.out.print("Please enter new human: ");
+        System.out.print("Please enter new human:\n" +
+                "Lastname FirstName Patronymic, BirdDate - like 16-06-1986 or 16.06.1986, \n" +
+                "Phone number - like 8-937-150-1505 or +79371501505 and sex - m or M for Male or f F for Female\n" +
+                "example: Kats Maxim Evgenievich 23.12.1984 +7-937-150-1505 M\n>>>>> ");
         String userInput = scanner.nextLine();
-        System.out.println(HumanService.parseToHuman(userInput));
-    }
+        Human human = new Human();
 
+        try {
+            human = HumanService.parseToHuman(userInput);
+            if (HumanService.allHumanValuesGood(human)) this.dataBase.writeNewHuman(human);
+            else System.out.println(HumanService.detailingHumanDataErrors(human));
+        } catch (HumanParsingException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
 
 
     public void showAll() {
@@ -40,6 +52,7 @@ public class ConsoleApp {
     }
 
     public void exit() {
+        System.out.println("buy buy ;)");
         this.run = false;
     }
 
@@ -47,7 +60,7 @@ public class ConsoleApp {
         while (this.isRun()) {
             showMenu();
             Commands selected = this.getMenu().
-                    get(inputNumber("Enter selected command number: ", this.getMenu().size()) - 1);
+                    get(inputNumber("\nEnter selected command number: ", this.getMenu().size()) - 1);
             selected.run();
         }
     }
@@ -80,8 +93,9 @@ public class ConsoleApp {
     }
 
     private void showMenu() {
+        System.out.println("Main menu: ");
         for (int i = 0; i < this.menu.size(); i++) {
-            System.out.println((i + 1) + ". " + menu.get(i).getName());
+            System.out.println("\t" + (i + 1) + ". " + menu.get(i).getName());
         }
     }
 }

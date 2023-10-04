@@ -4,13 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.gr40in.model.Human;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,26 +18,28 @@ public class FakeDataBase {
     private final String DIRECTORY_NAME = "AllLastNamesIn";
     private final Path BASE_PATH = Path.of(DIRECTORY_NAME);
     Set<String> allLastNames;
-//    Set<Human> allHumans;
+    Set<Human> allHumans;
 
     public FakeDataBase() {
         this.allLastNames = new HashSet<>();
-        if (isBaseDirectoryExists() && countOfFiles() > 0) this.allLastNames = readAllLastNames();
+        this.allHumans = new HashSet<>();
+        if (isBaseDirectoryExists() && countOfFiles() > 0) {
+            this.allLastNames = readAllLastNames();
 
+        }
     }
 
     public void writeNewHuman(Human human) {
-
         this.updateLastNameSet();
         if (!this.allLastNames.contains(human.getLastName())) {
             System.out.println(createLastNameFile(human.getLastName()));
         }
-
         Gson humanGson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter()).setPrettyPrinting().create();
         String humanJSON = humanGson.toJson(human);
 
         try {
             Files.write(Path.of(DIRECTORY_NAME, human.getLastName()), humanJSON.getBytes(), StandardOpenOption.APPEND);
+            System.out.println("Human " + human + " was written in \"database\"");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,6 +55,7 @@ public class FakeDataBase {
             try {
                 Files.createFile(Paths.get(DIRECTORY_NAME, lastName));
                 this.allLastNames.add(lastName);
+                System.out.println("File " + lastName + " was created");
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
